@@ -20,7 +20,7 @@
 
     <style>
         :root {
-            --dog-blue: #007AFF; /* Bright Electric Blue */
+            --dog-blue: #007AFF;
             --dog-sky: #E0F2FE;
             --dog-text: #1e3a8a;
         }
@@ -30,24 +30,18 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
             color: #334155;
             min-height: 100vh;
-            /* Prevent body scroll on desktop to enforce the frame feel */
-            @media (min-width: 768px) {
-                overflow: hidden;
-            }
         }
 
         h1, h2, h3, .brand-font {
             font-family: 'Poppins', sans-serif;
         }
 
-        /* --- Background Pattern --- */
         .watercolor-bg {
             background-color: #ffffff;
             background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
             background-size: 20px 20px;
         }
 
-        /* --- Cards --- */
         .dog-card {
             background: white;
             border-radius: 24px;
@@ -66,7 +60,6 @@
                 0 8px 10px -6px rgba(0, 122, 255, 0.1);
         }
 
-        /* --- UI Elements --- */
         .dog-btn {
             background: white;
             border: 1px solid #E2E8F0;
@@ -98,7 +91,6 @@
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
         }
         
-        /* New Settings Toggle Styles */
         .toggle-group {
             display: flex;
             background: #F1F5F9;
@@ -131,7 +123,7 @@
             border-color: var(--dog-blue);
             color: var(--dog-blue);
             box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
-            transform: scale(1.02); /* Pop effect */
+            transform: scale(1.02);
         }
 
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -150,6 +142,72 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         .compass-arrow { transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* ── Support Card ── */
+        @keyframes wag {
+            0%, 100% { transform: rotate(-12deg); }
+            50%       { transform: rotate(12deg); }
+        }
+        .paw-wag {
+            display: inline-block;
+            animation: wag 1.3s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+        .support-card {
+            background: linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%);
+            border: 1.5px solid #BFDBFE;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .support-card::before {
+            content: '';
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .support-btn {
+            background: linear-gradient(135deg, #2563EB, #0EA5E9);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 28px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .support-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+        }
+        .support-btn:active { transform: translateY(0); }
+        .amount-pill {
+            background: white;
+            border: 1.5px solid #BFDBFE;
+            color: #2563EB;
+            border-radius: 999px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        .amount-pill:hover, .amount-pill.selected {
+            background: #2563EB;
+            border-color: #2563EB;
+            color: white;
+            box-shadow: 0 3px 10px rgba(37,99,235,0.3);
+        }
     </style>
 </head>
 <body>
@@ -157,7 +215,9 @@
 
     <script type="text/babel">
 
-        // --- ICONS & LOGO ---
+        // ─────────────────────────────────────────────
+        // ICONS & LOGO
+        // ─────────────────────────────────────────────
         const Icons = {
             Logo: () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 959.16 958.88" className="w-12 h-12">
@@ -179,7 +239,6 @@
             Gear: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>,
             Board: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="9" y="2" width="6" height="20" rx="3"></rect><path d="M12 4v2"></path></svg>,
             Sun: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>,
-            // New Settings Icons
             LifeBuoy: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="14.83" y1="9.17" x2="18.36" y2="5.64"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>,
             Rocket: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
             Lightning: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
@@ -190,8 +249,9 @@
             Crown: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
         };
 
-        // --- DATA ---
-        // Facing is the compass direction the beach faces (approx degrees)
+        // ─────────────────────────────────────────────
+        // DATA
+        // ─────────────────────────────────────────────
         const LOCAL_SPOTS = [
             { id: 'omaha', name: 'Omaha Beach, NZ', lat: -36.3260, lon: 174.7804, description: "Clear waters, white sand. Best on N/NE swells.", difficulty: "Beginner", facing: 80 },
             { id: 'piha', name: 'Piha Beach, NZ', lat: -36.9547, lon: 174.4694, description: "Famous black sand surf. Strong currents.", difficulty: "Expert", facing: 260 },
@@ -206,63 +266,44 @@
             { id: 'trestles', name: 'Lower Trestles, CA', lat: 33.3829, lon: -117.5932, description: "High performance cobblestone reef.", difficulty: "Intermediate", facing: 225 },
         ];
 
-        // MOCK DATA: Tides are calculated mathematically (no API).
-        const MOCK_DATA = { tides: { high: "10:45 AM", low: "04:30 PM", nextHigh: "11:15 PM" } };
-
-        // --- HELPERS ---
+        // ─────────────────────────────────────────────
+        // HELPERS
+        // ─────────────────────────────────────────────
         const getStokeRating = (waveHeight, profile) => {
             let score = 5; 
             const { boardSize, skill } = profile;
-
-            // Height Logic (Meters)
             if (boardSize === 'long') {
                 if (waveHeight < 0.6) score += 3;
                 else if (waveHeight < 1.2) score += 2;
                 else if (waveHeight > 2.0) score -= 2;
-            } 
-            else if (boardSize === 'med') {
+            } else if (boardSize === 'med') {
                 if (waveHeight > 0.8 && waveHeight < 1.8) score += 3;
                 if (waveHeight < 0.5) score -= 2;
-            }
-            else if (boardSize === 'short') {
+            } else if (boardSize === 'short') {
                 if (waveHeight < 0.8) score -= 3;
                 if (waveHeight > 1.2) score += 4;
             }
-
             if (skill === 'kook') {
                 if (waveHeight > 1.2) score = 2;
                 else if (waveHeight < 0.8) score += 1;
-            }
-            else if (skill === 'pro') {
+            } else if (skill === 'pro') {
                 if (waveHeight < 0.8) score -= 2;
                 if (waveHeight > 1.5) score += 2;
             }
-
             score = Math.max(1, Math.min(10, Math.round(score)));
-            
-            let label = "Average";
-            let color = "text-yellow-500";
-            let bg = "bg-yellow-50";
-
+            let label = "Average", color = "text-yellow-500", bg = "bg-yellow-50";
             if (score >= 8) { label = "Epic Stoke!"; color = "text-green-600"; bg = "bg-green-50"; }
             else if (score >= 6) { label = "Fun Waves"; color = "text-green-500"; bg = "bg-green-50"; }
             else if (score <= 3) { label = skill === 'kook' && waveHeight > 1.5 ? "Scary Big!" : "Flat/Poor"; color = "text-red-500"; bg = "bg-red-50"; }
-
             return { score, label, color, bg };
         };
 
         const getWindQuality = (windDir, location) => {
             if (!location.facing) return { label: 'Unknown', color: 'text-slate-500' };
-            
             let diff = Math.abs(windDir - location.facing);
             if (diff > 180) diff = 360 - diff;
-            
-            // Onshore: Wind direction is similar to beach facing direction (within 60 degrees)
             if (diff < 60) return { label: 'Onshore 💨', color: 'text-red-500' };
-            
-            // Offshore: Wind direction is opposite to beach facing direction (within 60 degrees of 180 opposite)
             if (diff > 120) return { label: 'Offshore 💎', color: 'text-green-600' };
-            
             return { label: 'Cross-shore', color: 'text-yellow-600' };
         };
 
@@ -286,7 +327,6 @@
             return "Thunderstorm";
         };
 
-        // NEW: Dynamic Labels based on real data
         const getAirTempLabel = (temp) => {
             if (temp < 5) return "Freezing!";
             if (temp < 15) return "Crisp";
@@ -303,7 +343,9 @@
             return "Trunks";
         };
 
-        // --- COMPONENTS ---
+        // ─────────────────────────────────────────────
+        // COMPONENTS
+        // ─────────────────────────────────────────────
 
         function StatCard({ icon: Icon, label, value, subValue, highlight = false, rotation = 0 }) {
             return (
@@ -320,10 +362,9 @@
             );
         }
 
-        // Updated Wind Card to support quality colors
         function WindStatCard({ icon: Icon, label, value, subValue, qualityColor = 'text-slate-500', rotation = 0 }) {
             return (
-                <div className={`dog-card p-4 flex flex-col items-center justify-center text-center h-36`}>
+                <div className="dog-card p-4 flex flex-col items-center justify-center text-center h-36">
                     <div className="flex items-center justify-center mb-2 text-blue-600">
                         <div style={{ transform: `rotate(${rotation}deg)` }} className="compass-arrow">
                             <Icon className="w-8 h-8" />
@@ -339,14 +380,12 @@
         function SplitStatCard({ label1, value1, subValue1, icon1: Icon1, label2, value2, subValue2, icon2: Icon2 }) {
             return (
                 <div className="dog-card flex h-36 relative overflow-hidden">
-                    {/* Left Half */}
                     <div className="flex-1 flex flex-col items-center justify-center p-2 bg-blue-50/50 border-r border-slate-100">
                         <div className="text-blue-500 mb-1"><Icon1 className="w-5 h-5"/></div>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{label1}</span>
                         <span className="text-2xl font-bold text-slate-800">{value1}</span>
                         <span className="text-[10px] text-slate-400">{subValue1}</span>
                     </div>
-                    {/* Right Half */}
                     <div className="flex-1 flex flex-col items-center justify-center p-2">
                         <div className="text-cyan-500 mb-1"><Icon2 className="w-5 h-5"/></div>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{label2}</span>
@@ -360,52 +399,10 @@
         function WeatherCard({ weatherCode }) {
             return (
                 <div className="dog-card h-36 flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-lg shadow-blue-200">
-                     <div className="absolute top-0 right-0 p-4 opacity-20"><Icons.Sun className="w-16 h-16"/></div>
-                     <div className="text-5xl mb-2 drop-shadow-md">{getWeatherEmoji(weatherCode)}</div>
-                     <div className="font-bold text-lg tracking-wide drop-shadow-sm">{getWeatherDescription(weatherCode)}</div>
-                     <div className="text-xs opacity-80 uppercase tracking-widest font-semibold mt-1">Current Conditions</div>
-                </div>
-            );
-        }
-
-        function SurfCam({ location }) {
-            const query = encodeURIComponent(`${location.name} surf wave ocean`);
-            const imageUrl = `https://tse1.mm.bing.net/th?q=${query}&w=1600&h=900&c=7&rs=1&p=0`;
-            const [time, setTime] = React.useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-
-            React.useEffect(() => {
-                const timer = setInterval(() => setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })), 1000);
-                return () => clearInterval(timer);
-            }, []);
-
-            return (
-                <div className="dog-card col-span-1 md:col-span-2 lg:col-span-3 h-80 relative group overflow-hidden shadow-xl">
-                    <img 
-                        src={imageUrl} 
-                        alt={`${location.name} Surf Cam`} 
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                        onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1600"; }}
-                    />
-                    {/* Cinematic Letterbox */}
-                    <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-black/80 to-transparent pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
-
-                    {/* Overlay */}
-                    <div className="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
-                        <div className="flex justify-between items-start">
-                            <div className="flex items-center gap-3 bg-red-600/90 text-white px-3 py-1.5 rounded-md text-xs font-bold tracking-widest shadow-lg">
-                                <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div>
-                                LIVE FEED
-                            </div>
-                            <div className="text-xs font-mono text-white/90 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded border border-white/10">CAM 01 • 4K</div>
-                        </div>
-                        <div className="flex justify-between items-end">
-                             <div className="text-white/60 text-xs font-mono">{location.lat.toFixed(4)}, {location.lon.toFixed(4)}</div>
-                             <div className="text-white text-3xl font-bold font-mono tracking-tight drop-shadow-lg">{time}</div>
-                        </div>
-                    </div>
-                    {/* Scanlines */}
-                    <div className="absolute inset-0 pointer-events-none opacity-10" style={{background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #000 3px)'}}></div>
+                    <div className="absolute top-0 right-0 p-4 opacity-20"><Icons.Sun className="w-16 h-16"/></div>
+                    <div className="text-5xl mb-2 drop-shadow-md">{getWeatherEmoji(weatherCode)}</div>
+                    <div className="font-bold text-lg tracking-wide drop-shadow-sm">{getWeatherDescription(weatherCode)}</div>
+                    <div className="text-xs opacity-80 uppercase tracking-widest font-semibold mt-1">Current Conditions</div>
                 </div>
             );
         }
@@ -420,27 +417,21 @@
             const phase = Math.PI / 2 - frequency * highTideMinute;
 
             let pathD = `M0,${baseline} `;
-            const points = [];
-
             for (let i = 0; i <= 24 * 60; i += 20) {
                 const x = (i / (24 * 60)) * width;
                 const y = baseline - amplitude * Math.sin(frequency * i + phase);
                 pathD += `L${x},${y} `;
-                points.push({ x, y, time: i });
             }
-
             const fillPath = `${pathD} V${height + 50} H0 Z`;
             const now = new Date();
             const currentMin = now.getHours() * 60 + now.getMinutes();
             const nowX = (currentMin / (24 * 60)) * width;
 
-            // Generate Weather Markers every 2 hours
             const weatherMarkers = [];
             if (hourlyWeather && hourlyWeather.length >= 24) {
                 for (let h = 0; h < 24; h += 2) {
-                    const x = (h * 60 / (24 * 60)) * width;
                     weatherMarkers.push({
-                        x,
+                        x: (h * 60 / (24 * 60)) * width,
                         time: `${h}:00`,
                         emoji: getWeatherEmoji(hourlyWeather[h])
                     });
@@ -459,22 +450,17 @@
                             <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full border border-blue-500"></div> Low</span>
                         </div>
                     </div>
-                    
                     <div className="overflow-x-auto overflow-y-hidden custom-scrollbar flex-1 relative w-full">
                         <div style={{ width: `${width}px`, height: '100%' }} className="relative">
-                            
-                            {/* Weather Strip at Top */}
                             <div className="absolute top-2 left-0 w-full h-8 z-20 pointer-events-none">
                                 {weatherMarkers.map((m, i) => (
                                     <div key={i} className="absolute top-0 flex flex-col items-center transform -translate-x-1/2" style={{ left: `${m.x}px` }}>
-                                        <div className="text-xl leading-none shadow-sm filter drop-shadow-sm hover:scale-125 transition-transform cursor-help" title="Forecast">{m.emoji}</div>
+                                        <div className="text-xl leading-none">{m.emoji}</div>
                                         <div className="text-[9px] text-slate-400 font-bold mt-1">{m.time}</div>
-                                        {/* Vertical Guide Line */}
-                                        <div className="w-px h-40 bg-slate-200 mt-1 dashed opacity-50"></div>
+                                        <div className="w-px h-40 bg-slate-200 mt-1 opacity-50"></div>
                                     </div>
                                 ))}
                             </div>
-
                             <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" className="absolute bottom-0 pt-10">
                                 <defs>
                                     <linearGradient id="tideGradient" x1="0" y1="0" x2="0" y2="1">
@@ -487,8 +473,74 @@
                                 <line x1={nowX} y1="0" x2={nowX} y2={height} stroke="#EF4444" strokeDasharray="4 4" strokeWidth="2" />
                                 <circle cx={nowX} cy={baseline - amplitude * Math.sin(frequency * currentMin + phase)} r="5" fill="#EF4444" stroke="white" strokeWidth="2"/>
                             </svg>
-                            
                             <div className="absolute top-12 text-[10px] font-bold text-white bg-red-500 px-2 py-0.5 rounded-full transform -translate-x-1/2 shadow-md z-30" style={{ left: `${nowX}px` }}>NOW</div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ─────────────────────────────────────────────
+        // SUPPORT CARD
+        // Replace YOUR_LEMON_SQUEEZY_LINK with your
+        // actual Lemon Squeezy checkout URL
+        // ─────────────────────────────────────────────
+        function SupportCard() {
+            const LEMON_SQUEEZY_BASE = 'YOUR_LEMON_SQUEEZY_LINK';
+            const [selected, setSelected] = React.useState(null);
+
+            const amounts = [
+                { label: '🦴 Treat', value: 3, desc: 'A dog biscuit' },
+                { label: '☕ Coffee', value: 6, desc: 'Flat white' },
+                { label: '🍺 Beer', value: 12, desc: 'Post-surf cold one' },
+            ];
+
+            const handleSupport = () => {
+                const cents = selected ? selected * 100 : null;
+                const url = cents 
+                    ? `${LEMON_SQUEEZY_BASE}?checkout[custom_price]=${cents}`
+                    : LEMON_SQUEEZY_BASE;
+                window.open(url, '_blank');
+            };
+
+            return (
+                <div className="support-card col-span-1 md:col-span-2 lg:col-span-3 p-6 md:p-8">
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div className="flex items-start gap-4">
+                            <div className="text-4xl select-none shrink-0 mt-1">
+                                <span className="paw-wag">🐾</span>
+                            </div>
+                            <div>
+                                <h3 className="font-extrabold text-slate-800 text-lg leading-tight mb-1" style={{fontFamily: 'Poppins, sans-serif'}}>
+                                    Surfdog is free. Keep it wagging.
+                                </h3>
+                                <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
+                                    No ads, no subscriptions, no nonsense. Built by a surfer, for surfers. 
+                                    If it helped you score a session, shout the dog a treat.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-start md:items-end gap-3 w-full md:w-auto shrink-0">
+                            <div className="flex gap-2 flex-wrap">
+                                {amounts.map(a => (
+                                    <button
+                                        key={a.value}
+                                        className={`amount-pill ${selected === a.value ? 'selected' : ''}`}
+                                        onClick={() => setSelected(selected === a.value ? null : a.value)}
+                                        title={a.desc}
+                                    >
+                                        {a.label} ${a.value}
+                                    </button>
+                                ))}
+                            </div>
+                            <button className="support-btn" onClick={handleSupport}>
+                                {selected 
+                                    ? `Shout ${amounts.find(a => a.value === selected)?.label} →` 
+                                    : 'Pay it forward 🤙'}
+                            </button>
+                            <p className="text-[11px] text-slate-400 font-medium">
+                                Pay what you want · Secure checkout · No account needed
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -567,7 +619,6 @@
             );
         }
 
-        // New ModeCard Component used in Sidebar
         function ModeCard({ profile, onClick }) {
             return (
                 <button onClick={onClick} className="w-full relative group">
@@ -600,19 +651,12 @@
                         <h2 className="text-2xl font-extrabold text-slate-800">Your Setup</h2>
                         <button onClick={onCancel} className="p-2 text-slate-400 hover:text-slate-600"><Icons.X className="w-6 h-6"/></button>
                     </div>
-
                     <div className="space-y-8 flex-1 overflow-y-auto px-1">
-                        
-                        {/* Board Type Toggle */}
                         <div>
                             <h3 className="font-bold text-slate-400 uppercase tracking-wider text-xs mb-3">Your Quiver</h3>
                             <div className="toggle-group">
                                 {['soft', 'hard'].map(type => (
-                                    <div 
-                                        key={type}
-                                        onClick={() => setLocalProfile({...localProfile, boardType: type})}
-                                        className={`toggle-option ${localProfile.boardType === type ? 'selected' : ''}`}
-                                    >
+                                    <div key={type} onClick={() => setLocalProfile({...localProfile, boardType: type})} className={`toggle-option ${localProfile.boardType === type ? 'selected' : ''}`}>
                                         <div className="text-current mb-2">
                                             {type === 'soft' ? <Icons.LifeBuoy className="w-8 h-8"/> : <Icons.Rocket className="w-8 h-8"/>}
                                         </div>
@@ -621,24 +665,17 @@
                                 ))}
                             </div>
                         </div>
-
-                        {/* Length Toggle */}
                         <div>
                             <h3 className="font-bold text-slate-400 uppercase tracking-wider text-xs mb-3">Length</h3>
                             <div className="toggle-group">
                                 {[
-                                    { id: 'short', name: 'Shortie', Icon: Icons.Lightning, label: 'Short' },
-                                    { id: 'med', name: 'Middie', Icon: Icons.Target, label: 'Mid' },
-                                    { id: 'long', name: 'Longboard', Icon: Icons.Tree, label: 'Long' }
+                                    { id: 'short', name: 'Shortie', Icon: Icons.Lightning },
+                                    { id: 'med', name: 'Middie', Icon: Icons.Target },
+                                    { id: 'long', name: 'Longboard', Icon: Icons.Tree }
                                 ].map(size => (
-                                    <div 
-                                        key={size.id}
-                                        onClick={() => setLocalProfile({...localProfile, boardSize: size.id})}
-                                        className={`toggle-option ${localProfile.boardSize === size.id ? 'selected' : ''}`}
-                                    >
+                                    <div key={size.id} onClick={() => setLocalProfile({...localProfile, boardSize: size.id})} className={`toggle-option ${localProfile.boardSize === size.id ? 'selected' : ''}`}>
                                         <div className="text-current mb-1"><size.Icon className="w-6 h-6"/></div>
                                         <div className="font-bold text-sm">{size.name}</div>
-                                        <div className="text-[10px] opacity-70">{size.label}</div>
                                     </div>
                                 ))}
                             </div>
@@ -648,40 +685,29 @@
                                 {localProfile.boardSize === 'long' && "You'll catch pretty much everything. High rating for small waves."}
                             </div>
                         </div>
-
-                        {/* Skill Level Toggle */}
                         <div>
                             <h3 className="font-bold text-slate-400 uppercase tracking-wider text-xs mb-3">Skill Level</h3>
                             <div className="toggle-group">
                                 {[
-                                    {id: 'kook', name: 'Paddler', Icon: Icons.Paw, label: 'Beginner'},
-                                    {id: 'intermediate', name: 'Chaser', Icon: Icons.Fin, label: 'Intermed'},
-                                    {id: 'pro', name: 'Big Dog', Icon: Icons.Crown, label: 'Pro'}
+                                    {id: 'kook', name: 'Paddler', Icon: Icons.Paw},
+                                    {id: 'intermediate', name: 'Chaser', Icon: Icons.Fin},
+                                    {id: 'pro', name: 'Big Dog', Icon: Icons.Crown}
                                 ].map(level => (
-                                    <div 
-                                        key={level.id}
-                                        onClick={() => setLocalProfile({...localProfile, skill: level.id})}
-                                        className={`toggle-option ${localProfile.skill === level.id ? 'selected' : ''}`}
-                                    >
+                                    <div key={level.id} onClick={() => setLocalProfile({...localProfile, skill: level.id})} className={`toggle-option ${localProfile.skill === level.id ? 'selected' : ''}`}>
                                         <div className="text-current mb-1"><level.Icon className="w-6 h-6"/></div>
                                         <div className="font-bold text-sm">{level.name}</div>
-                                        <div className="text-[10px] opacity-70">{level.label}</div>
                                     </div>
                                 ))}
                             </div>
-                             <div className="mt-2 text-xs text-center text-slate-400 italic">
+                            <div className="mt-2 text-xs text-center text-slate-400 italic">
                                 {localProfile.skill === 'kook' && "I like small, friendly waves. Big stuff scares me."}
                                 {localProfile.skill === 'intermediate' && "I can catch green waves and turn a bit."}
                                 {localProfile.skill === 'pro' && "Barrels, airs, and heavy water. Bring it on."}
                             </div>
                         </div>
                     </div>
-
                     <div className="mt-6 pt-6 border-t border-slate-100">
-                        <button 
-                            onClick={() => onSave(localProfile)}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95"
-                        >
+                        <button onClick={() => onSave(localProfile)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95">
                             Save Profile
                         </button>
                     </div>
@@ -689,13 +715,15 @@
             );
         }
 
+        // ─────────────────────────────────────────────
+        // APP
+        // ─────────────────────────────────────────────
         function App() {
             const [view, setView] = React.useState('dashboard'); 
             const [favorites, setFavorites] = React.useState(() => {
                 try { const saved = localStorage.getItem('surfdogFavs'); return saved ? JSON.parse(saved) : LOCAL_SPOTS; } 
                 catch (e) { return LOCAL_SPOTS; }
             });
-
             const [profile, setProfile] = React.useState(() => {
                 try { 
                     const saved = localStorage.getItem('surfdogProfile'); 
@@ -721,10 +749,8 @@
                         const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,wind_direction_10m,weather_code&hourly=weather_code&timezone=auto`);
                         const weatherJson = await weatherRes.json();
                         if (!marineJson.current || !weatherJson.current) throw new Error("Incomplete data");
-
                         const currentHour = new Date().getHours();
                         const currentWaterTemp = marineJson.hourly?.sea_surface_temperature ? marineJson.hourly.sea_surface_temperature[currentHour] : null; 
-
                         setData({
                             waveHeight: marineJson.current.wave_height,
                             wavePeriod: marineJson.current.wave_period,
@@ -749,7 +775,6 @@
 
             const getCompassDir = (deg) => ['N','NE','E','SE','S','SW','W','NW'][Math.round(deg / 45) % 8];
             const isCurrentFavorite = favorites.some(f => f.id === activeLocation.id);
-
             const rating = data ? getStokeRating(data.waveHeight, profile) : { score: '-', label: 'Loading', color: 'text-slate-400', bg: 'bg-slate-50' };
             const windStatus = data ? getWindQuality(data.windDir, activeLocation) : { label: 'Unknown', color: '' };
 
@@ -757,10 +782,9 @@
                 <div className="flex justify-center p-0 md:p-8 watercolor-bg min-h-screen md:h-screen md:overflow-hidden">
                     <div className="w-full max-w-7xl md:rounded-[32px] overflow-hidden flex flex-col md:flex-row h-full md:h-[calc(100vh-4rem)] shadow-2xl border-0 md:border border-slate-200 bg-white/50 backdrop-blur-sm">
                         
-                        {/* Sidebar (Full Height on Desktop, Normal flow on Mobile) */}
+                        {/* Sidebar */}
                         <div className="w-full md:w-80 bg-white border-b md:border-b-0 md:border-r border-slate-100 flex flex-col relative z-20 shrink-0 h-auto md:h-full">
                             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400"></div>
-                            
                             <div className="p-6 relative flex-none">
                                 <div className="flex items-center justify-between mb-6 md:mb-8">
                                     <div className="flex items-center gap-3">
@@ -774,16 +798,11 @@
                                         <Icons.Gear className="w-5 h-5" />
                                     </button>
                                 </div>
-
-                                {/* Mode Card (Mobile Only Position) */}
                                 <div className="block md:hidden mb-6">
                                     <ModeCard profile={profile} onClick={() => setView('settings')} />
                                 </div>
-
                                 <SearchBox onSelectLocation={setActiveLocation} />
                             </div>
-
-                            {/* Favorites List */}
                             <div className="flex-1 overflow-y-auto custom-scrollbar px-6 pb-2 min-h-[150px] md:min-h-0">
                                 <div className="px-2 pb-2 text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
                                     <Icons.Star className="w-3 h-3 text-slate-300" fill="currentColor"/> Favorites
@@ -798,16 +817,13 @@
                                     ))}
                                 </div>
                             </div>
-
-                            {/* Mode Card (Desktop Only Position - Bottom Left) */}
                             <div className="hidden md:block p-6 mt-auto border-t border-slate-100">
                                 <ModeCard profile={profile} onClick={() => setView('settings')} />
                             </div>
                         </div>
 
-                        {/* Main Content Area (Scrolls independently on desktop) */}
+                        {/* Main Content */}
                         <div className="flex-1 p-4 md:p-10 relative overflow-y-auto custom-scrollbar bg-slate-50/50 h-full">
-                            
                             {view === 'settings' ? (
                                 <SettingsView 
                                     profile={profile} 
@@ -816,7 +832,6 @@
                                 />
                             ) : (
                                 <>
-                                    {/* Header */}
                                     <div className="flex flex-col md:flex-row justify-between items-start md:items-start mb-8 gap-4 border-b border-slate-200 pb-6">
                                         <div>
                                             <div className="flex items-center gap-3 mb-1">
@@ -832,8 +847,6 @@
                                                 </span>
                                             </p>
                                         </div>
-
-                                        {/* Stoke Rating Card */}
                                         <div className={`p-4 rounded-2xl border-2 ${rating.bg} border-opacity-50 w-full md:w-auto md:min-w-[180px] text-center shadow-sm`}>
                                             <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Stoke Rating</div>
                                             <div className={`text-4xl font-extrabold ${rating.color}`}>{rating.score}<span className="text-xl text-slate-400">/10</span></div>
@@ -841,7 +854,6 @@
                                         </div>
                                     </div>
 
-                                    {/* Grid */}
                                     {loading ? (
                                         <div className="h-96 flex flex-col items-center justify-center gap-4">
                                             <div className="spinner w-8 h-8"></div>
@@ -851,8 +863,6 @@
                                         <div className="p-8 bg-red-50 border border-red-100 rounded-2xl text-center text-red-600 font-medium">{error}</div>
                                     ) : data && (
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 md:pb-0">
-                                            
-                                            {/* Key Stats (Wave Height, Swell Dir, Wind) */}
                                             <StatCard icon={Icons.Waves} label="Wave Height" value={`${data.waveHeight}m`} subValue={`${data.wavePeriod}s Period`} highlight={true} />
                                             <StatCard icon={Icons.Navigation} label="Swell Dir" value={getCompassDir(data.waveDir)} subValue={`${data.waveDir}°`} rotation={data.waveDir} />
                                             <WindStatCard 
@@ -863,31 +873,23 @@
                                                 qualityColor={windStatus.color}
                                                 rotation={data.windDir} 
                                             />
-                                            
-                                            {/* Weather & Temp Split */}
                                             <WeatherCard weatherCode={data.weatherCode} />
                                             <SplitStatCard 
                                                 label1="Air Temp" value1={`${Math.round(data.temp)}°`} subValue1={getAirTempLabel(data.temp)} icon1={Icons.Thermometer}
                                                 label2="Water" value2={data.waterTemp !== null ? `${data.waterTemp}°` : "No Data"} subValue2={getWaterTempLabel(data.waterTemp)} icon2={Icons.Droplets}
                                             />
-                                            
-                                            {/* Local Knowledge */}
                                             <div className="dog-card p-6 flex flex-col justify-center relative overflow-hidden h-36">
-                                                <div className="watercolor-stripe absolute top-0 right-0 w-32 h-full pointer-events-none opacity-20 transform skew-x-12"></div>
                                                 <h3 className="font-bold uppercase tracking-wider text-sm text-blue-600 mb-1">Local Knowledge</h3>
-                                                <p className="text-slate-600 leading-snug text-sm font-medium line-clamp-2">
-                                                    {activeLocation.description}
-                                                </p>
+                                                <p className="text-slate-600 leading-snug text-sm font-medium line-clamp-2">{activeLocation.description}</p>
                                                 <div className="mt-2 flex items-center gap-2">
                                                     <span className="px-1.5 py-0.5 bg-slate-100 rounded text-[10px] font-bold text-slate-500">Safe Swim</span>
                                                 </div>
                                             </div>
-
-                                            {/* Full Width Camera */}
-                                            <SurfCam location={activeLocation} />
-
-                                            {/* Full Width Tide Graph */}
                                             <TideGraph hourlyWeather={data.hourlyWeather} />
+
+                                            {/* ── Support Card ── */}
+                                            <SupportCard />
+
                                         </div>
                                     )}
                                 </>
